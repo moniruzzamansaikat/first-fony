@@ -13,6 +13,7 @@ class SiteController extends AbstractController
     public function index(): Response
     {
         return $this->render('site/index.html.twig', [
+            'ok' => ok(),
             'symfony_version' => Kernel::VERSION,
             'php_version' => PHP_VERSION,
             'controller_name' => 'SiteController',
