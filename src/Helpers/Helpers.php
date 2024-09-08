@@ -1,6 +1,12 @@
 <?php
 
-function ok()
+use App\Kernel;
+
+function sys()
 {
-  return "fuck";
+  $system = new stdClass();
+  $system->software = '1.0.0';
+  $system->framework = Kernel::VERSION;
+
+  return $system;
 }
