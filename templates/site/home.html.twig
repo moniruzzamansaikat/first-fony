@@ -1,10 +1,15 @@
 {% extends 'layouts/site.html.twig' %}
 
 {% block content %}
-<div class="example-wrapper">
-    <h3>Software Version: {{ softwareVersion }}! ✅</h3>
-    <h3>PHP Version: {{ phpVersion }}! ✅</h3>
-    <h3>Symfony Version: {{ frameworkVersion }}! ✅</h3>
-    <h3>Timezone: {{ timeZone }}! ✅</h3>
+
+<div class="row">
+    <div class="col-md-4 offset-4 my-5">
+        <div class="card p-4">
+            <h3 class="text-center">
+            Welcome to the system  🤙
+            </h3>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

@@ -15,20 +15,20 @@ class SiteController extends AbstractController
     public function home(): Response
     {
         $title        = 'Home';
-        $softwareVersion  = sys()->software;
-        $frameworkVersion = sys()->framework;
-        $phpVersion       = sys()->php_version;
-        $timeZone         = sys()->timezone;
 
-        return $this->render('site/home.html.twig', compact('title', 'timeZone', 'softwareVersion', 'frameworkVersion', 'phpVersion'));
+        return $this->render('site/home.html.twig', compact('title'));
     }
 
     #[Route('/about', name: 'site_about')]
     public function about(): Response
     {
-        $title = 'About';
+        $title            = 'About';
+        $softwareVersion  = sys()->software;
+        $frameworkVersion = sys()->framework;
+        $phpVersion       = sys()->php_version;
+        $timeZone         = sys()->timezone;
 
-        return $this->render('site/about.html.twig', compact('title'));
+        return $this->render('site/about.html.twig', compact('title', 'softwareVersion', 'frameworkVersion', 'phpVersion', 'timeZone'));
     }
 
     #[Route('/db', name: 'site_db')]
@@ -51,11 +51,17 @@ class SiteController extends AbstractController
         // dd($totalUsers);   
     }
 
+    #[Route('/login', name: 'site_login')]
+    public function login(): Response
+    {
+        $title = 'Login';
+        return $this->render('site/auth/login.html.twig', compact('title'));
+    }
+    
     #[Route('/register', name: 'site_register')]
     public function register(): Response
     {
         $title = 'Register';
-
         return $this->render('site/auth/register.html.twig', compact('title'));
     }
 }
