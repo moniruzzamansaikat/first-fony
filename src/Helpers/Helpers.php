@@ -1,9 +1,6 @@
 <?php
 
 use App\Kernel;
-use App\Service\ViewService;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 function sys()
 {
