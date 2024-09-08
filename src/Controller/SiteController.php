@@ -14,8 +14,9 @@ class SiteController extends AbstractController
         $pageTitle        = 'Home';
         $softwareVersion  = sys()->software;
         $frameworkVersion = sys()->framework;
+        $phpVersion       = sys()->php_version;
 
-        return $this->render('site/home.html.twig', compact('pageTitle', 'softwareVersion', 'frameworkVersion'));
+        return $this->render('site/home.html.twig', compact('pageTitle', 'softwareVersion', 'frameworkVersion', 'phpVersion'));
     }
 
     #[Route('/about', name: 'site_about')]
