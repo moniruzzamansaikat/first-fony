@@ -47,7 +47,6 @@ class SiteController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
-        AuthenticatorInterface $authenticatorInterface
     ): Response {
         $title = 'Register';
 
@@ -63,8 +62,6 @@ class SiteController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $authenticatorInterface->authenticate($request);
-            
             return $this->redirectToRoute('site_home');
         }
 
