@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 
 class SiteController extends AbstractController
 {
@@ -31,37 +35,42 @@ class SiteController extends AbstractController
         return $this->render('site/about.html.twig', compact('title', 'softwareVersion', 'frameworkVersion', 'phpVersion', 'timeZone'));
     }
 
-    #[Route('/db', name: 'site_db')]
-    public function db(EntityManagerInterface $entityManager)
-    {
-        // $user = $entityManager->getRepository(User::class)->find(1);
-        // dd($user->getFirstname());
-
-        $users = $entityManager->getRepository(User::class)->findAll();
-        // dd($users);
-    }
-
-    #[Route('/users', name: 'site_users')]
-    public function users(UserRepository $userRepository)
-    {
-        // $users = $userRepository->findAll();
-        // dd($users);
-
-        // $totalUsers = $userRepository->count();
-        // dd($totalUsers);   
-    }
-
     #[Route('/login', name: 'site_login')]
     public function login(): Response
     {
         $title = 'Login';
         return $this->render('site/auth/login.html.twig', compact('title'));
     }
-    
+
     #[Route('/register', name: 'site_register')]
-    public function register(): Response
-    {
+    public function register(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        AuthenticatorInterface $authenticatorInterface
+    ): Response {
         $title = 'Register';
-        return $this->render('site/auth/register.html.twig', compact('title'));
+
+        $form = $this->createForm(RegistrationType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $authenticatorInterface->authenticate($request);
+            
+            return $this->redirectToRoute('site_home');
+        }
+
+        return $this->render('site/auth/register.html.twig', [
+            'title' => $title,
+            'form' => $form->createView(),
+        ]);
     }
 }
